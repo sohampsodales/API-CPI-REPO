@@ -112,7 +112,7 @@ export default function App() {
 
       const a = document.createElement("a");
       a.href = url;
-      a.download = "api_debug_report.html";
+      a.download = "api-test-results.zip";
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -134,7 +134,7 @@ export default function App() {
         </div>
         <h1> API Testing Framework</h1>
         <p className="subtitle">
-          Upload your Excel file, choose authentication
+          Choose Authentication & Upload your Excel File
         </p>
 
         <div className="section">
@@ -233,7 +233,7 @@ export default function App() {
         {reportUrl ? (
           <div className="section">
             <a href={reportUrl} target="_blank" rel="noreferrer">
-              Preview generated report
+              Download generated report
             </a>
           </div>
         ) : null}

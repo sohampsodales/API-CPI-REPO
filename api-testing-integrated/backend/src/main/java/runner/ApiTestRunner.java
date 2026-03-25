@@ -19,10 +19,18 @@ import org.testng.Assert;
 
 
 public class ApiTestRunner extends OAuth2Client {
-    private static final String CSV_FILE = org.sodales.ApiTestRunnerPaths.getCsvReportPath();
-    private static final String HTML_FILE = org.sodales.ApiTestRunnerPaths.getHtmlReportPath();
-    private static boolean htmlHeaderWritten = false;
-    private static final String EXTENT_HTML_FILE = "src/main/resources/api_extent_debug_report.html";
+   private static String getCsvFile() {
+    return org.sodales.ApiTestRunnerPaths.getCsvReportPath();
+}
+
+private static String getHtmlFile() {
+    return org.sodales.ApiTestRunnerPaths.getHtmlReportPath();
+}
+
+private static String getExtentHtmlFile() {
+    return org.sodales.ApiTestRunnerPaths.getExtentHtmlReportPath();
+}
+  private static boolean htmlHeaderWritten = false;
     static ExtentReports extent = new ExtentReports();
     static Boolean responseflag;
     static Boolean codeflag;
@@ -106,9 +114,9 @@ public class ApiTestRunner extends OAuth2Client {
     // This method used to create and write the html report.
     // Accepts the parameters which needs to be in the report.
     private static void writeToCSV(String requestUrl, String requestHeaders, String expectedresponsecode, int responseCode, String expectedresponsebody, String responseBody) {
-        File file = new File(CSV_FILE);
+        File file = new File(getCsvFile());
         boolean fileExists = file.exists();
-        try (CSVWriter writer = new CSVWriter(new FileWriter(CSV_FILE, true))) {
+        try (CSVWriter writer = new CSVWriter(new FileWriter(getCsvFile(), true))) {
             if (!fileExists) {
                 writer.writeNext(new String[]{"Request URL", "Request Headers", "Expected Response Code", "Actual Response Code", "Expected Response Body", "Actual Response Body"});
             }
@@ -122,8 +130,8 @@ public class ApiTestRunner extends OAuth2Client {
     // Accepts the parameters which needs to be in the report and also mark the table rows red for failure and green for pass.
     private static void writeToHTML(String testName, String requestUrl, String requestHeaders,
                                     String expectedresponsecode, int responseCode, String expectedresponsebody, String responseBody) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(HTML_FILE, true))) {
-            File htmlFile = new File(HTML_FILE);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(getHtmlFile(), true))) {
+    File htmlFile = new File(getHtmlFile());
             if (!htmlHeaderWritten) {
                 writer.write(
                         "<html><head><style>" +
@@ -204,7 +212,7 @@ public class ApiTestRunner extends OAuth2Client {
     // This method accepts the parameters to print in the report.
     private static void extendReport(String testName, String requestUrl, String requestHeaders,
                                      String expectedresponsecode, int responseCode, String expectedresponsebody, String responseBody) {
-        ExtentSparkReporter spark = new ExtentSparkReporter(EXTENT_HTML_FILE);
+        ExtentSparkReporter spark = new ExtentSparkReporter(getExtentHtmlFile());
         extent.attachReporter(spark);
         ExtentTest test = extent.createTest(testName);
         test.info(requestUrl);

@@ -8,12 +8,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Base64;
 import java.util.Properties;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @RestController
 @CrossOrigin("*")
@@ -27,6 +31,9 @@ public class ApiController {
 
     private static final String HTML_REPORT =
             TEMP_DIR + File.separator + "api_debug_report.html";
+
+    private static final String EXTENT_HTML_REPORT =
+            TEMP_DIR + File.separator + "api_extent_debug_report.html";
 
     private static final String CSV_REPORT =
             TEMP_DIR + File.separator + "api_debug_report.csv";
@@ -73,26 +80,37 @@ public class ApiController {
             ApiTests.setExcelPath(EXCEL_TARGET);
             ApiTestRunnerPaths.setHtmlReportPath(HTML_REPORT);
             ApiTestRunnerPaths.setCsvReportPath(CSV_REPORT);
+            ApiTestRunnerPaths.setExtentHtmlReportPath(EXTENT_HTML_REPORT);
 
             ApiTests.main(null);
 
-            File reportFile = new File(HTML_REPORT);
+            File htmlReportFile = new File(HTML_REPORT);
+            File csvReportFile = new File(CSV_REPORT);
+            File extentHtmlReportFile = new File(EXTENT_HTML_REPORT);
 
-            if (!reportFile.exists()) {
+            if (!htmlReportFile.exists() && !csvReportFile.exists() && !extentHtmlReportFile.exists()) {
                 return ResponseEntity.internalServerError()
-                        .body("Report was not generated".getBytes());
+                        .body("Report files are not generated".getBytes());
             }
 
-            byte[] bytes = Files.readAllBytes(reportFile.toPath());
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ZipOutputStream zipOut = new ZipOutputStream(baos);
+
+            addFileToZip(zipOut, htmlReportFile, "api_debug_report.html");
+            addFileToZip(zipOut, csvReportFile, "api_debug_report.csv");
+            addFileToZip(zipOut, extentHtmlReportFile, "api_extent_debug_report.html");
+
+            zipOut.close();
 
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=api_debug_report.html")
-                    .header(HttpHeaders.CONTENT_TYPE, "text/html")
-                    .body(bytes);
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=api-test-results.zip")
+                    .header(HttpHeaders.CONTENT_TYPE, "application/zip")
+                    .body(baos.toByteArray());
 
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.internalServerError()
-                    .body(("Error: " + e.getMessage()).getBytes());
+                    .body(("Error: " + e.getClass().getName() + " - " + e.getMessage()).getBytes());
         }
     }
 
@@ -162,12 +180,27 @@ public class ApiController {
     private void clearOldReports() {
         deleteIfExists(HTML_REPORT);
         deleteIfExists(CSV_REPORT);
+        deleteIfExists(EXTENT_HTML_REPORT);
     }
 
     private void deleteIfExists(String filePath) {
         File file = new File(filePath);
         if (file.exists()) {
             file.delete();
+        }
+    }
+
+    private void addFileToZip(ZipOutputStream zipOut, File file, String fileName) throws IOException {
+        if (file != null && file.exists()) {
+            try (FileInputStream fis = new FileInputStream(file)) {
+                zipOut.putNextEntry(new ZipEntry(fileName));
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = fis.read(buffer)) > 0) {
+                    zipOut.write(buffer, 0, length);
+                }
+                zipOut.closeEntry();
+            }
         }
     }
 
