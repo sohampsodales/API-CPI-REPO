@@ -187,10 +187,23 @@ export default function App() {
 
   return (
     <div className="page">
-      <div className="card">
-        <div className="header">
-          <img src={logo} alt="Logo" className="logo" />
+      <div className="navbar">
+        <div className="nav-left">
+          <div className="header">
+            <img src={logo} alt="Logo" className="logo" />
+          </div>
+          <span className="nav-title">QA Tools </span>
         </div>
+
+        <div className="nav-right">
+          <button className="nav-link">Home</button>
+          <button className="nav-link">Docs</button>
+          {/* <button className="nav-link">Support</button> */}
+        </div>
+      </div>
+
+      <div className="card">
+        
         <h1> API Testing Framework</h1>
         <p className="subtitle">
           Choose Authentication & Upload your Excel File

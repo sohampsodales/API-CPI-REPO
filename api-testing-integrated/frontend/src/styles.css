@@ -18,11 +18,15 @@ body {
 }
 .card {
   width: 100%;
-  max-width: 820px;
+  max-width: auto;
+  height: auto;
+  max-height: auto;
   background: #ffffff;
   border-radius: 18px;
   padding: 28px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+  margin-top: 90px;
 }
 h1 {
   margin: 0 0 8px;
@@ -109,6 +113,7 @@ small {
   display: flex;
   align-items: left; /* vertical alignment */
   gap: 100px; /* space between logo and text */
+  margin-bottom: 15px;
 }
 
 .header .logo {
@@ -116,16 +121,6 @@ small {
   width: auto;
 }
 
-.header-text h1 {
-  margin: 0; /* remove default top/bottom margin */
-  font-size: 1.8rem;
-}
-
-.header-text .subtitle {
-  margin: 0;
-  font-size: 0.95rem;
-  color: #555;
-}
 .dropzone {
   border: 2px dashed #94a3b8;
   border-radius: 12px;
@@ -167,6 +162,60 @@ small {
   font-size: 14px;
   color: #334155;
   word-break: break-word;
+}
+
+.navbar {
+  position: fixed; /* sticks to the top */
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 24px;
+  background-color: #319691;
+  color: white;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(207, 72, 72, 0.1);
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-logo {
+  height: 35px;
+}
+
+.nav-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.nav-right {
+  display: flex;
+  gap: 15px;
+}
+
+.nav-link {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+/* Push content below navbar */
+.content {
+  margin-top: 70px; /* adjust based on navbar height */
+  display: flex;
+  justify-content: center;
 }
 @media (max-width: 700px) {
   .grid.two {
