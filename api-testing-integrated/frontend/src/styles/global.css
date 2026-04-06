@@ -18,15 +18,15 @@ body {
 }
 .card {
   width: 100%;
-  max-width: auto;
+  max-width: 820px;
   height: auto;
   max-height: auto;
   background: #ffffff;
   border-radius: 18px;
   padding: 28px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 30px rgba(209, 14, 14, 0.08);
 
-  margin-top: 90px;
+  margin: 200px auto 0 auto;
 }
 h1 {
   margin: 0 0 8px;
@@ -197,6 +197,7 @@ small {
 .nav-right {
   display: flex;
   gap: 15px;
+  align-items: center;
 }
 
 .nav-link {
