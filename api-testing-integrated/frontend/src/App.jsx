@@ -203,8 +203,7 @@ export default function App() {
       </div>
 
       <div className="card">
-        
-        <h1> API Testing Framework</h1>
+        <h1> API Testing Framework CPI</h1>
         <p className="subtitle">
           Choose Authentication & Upload your Excel File
         </p>
