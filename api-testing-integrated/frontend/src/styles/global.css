@@ -1,7 +1,7 @@
 :root {
   font-family: Arial, sans-serif;
   color: #111827;
-  background: #14595e;
+  background: #013e4c;
 }
 * {
   box-sizing: border-box;
@@ -18,14 +18,13 @@ body {
 }
 .card {
   width: 90%;
-  max-width: 820px;
-
+  max-width: 1000px;
   background: #ffffff;
   border-radius: 18px;
   padding: 24px;
   box-shadow: 0 10px 30px rgba(209, 14, 14, 0.08);
 
-  margin: 150px auto 20px auto;
+  margin: 180px auto 20px auto;
 }
 h1 {
   margin: 0 0 8px;
@@ -122,7 +121,7 @@ small {
 }
 
 .header .logo {
-  height: 40px; /* adjust size */
+  height: 60px; /* adjust size */
   width: auto;
 }
 
@@ -178,7 +177,7 @@ small {
   justify-content: space-between;
   align-items: center;
   padding: 14px 24px;
-  background-color: #319691;
+  background-color: #025a6d;
   color: white;
   z-index: 1000;
   box-shadow: 0 2px 8px rgba(207, 72, 72, 0.1);
@@ -202,7 +201,8 @@ small {
   font-size: 28px;
   font-weight: 600;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
-  color: black;
+  color: rgb(255, 255, 255);
+  margin-top: -15px;
 }
 
 .nav-right {
@@ -230,7 +230,7 @@ small {
   font-weight: 600;
 } */
 .navTab {
-  color: #555;
+  color: #fffefe;
   padding: 6px 10px;
   border-bottom: 2px solid transparent;
 }
@@ -241,7 +241,7 @@ small {
 
 .navTabActive {
   color: #ffffff;
-  border-bottom: 2px solid #14595e;
+  border-bottom: 2px solid #f1f7f7;
 }
 .navTabActive:hover {
   border-bottom: 2px #7decf4;

@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import logo from "../assets/logo-sodales-dark.png";
+import logo from "../assets/sodales-Logos_White.png";
 import "../styles/global.css";
 
 export default function MainLayout() {
