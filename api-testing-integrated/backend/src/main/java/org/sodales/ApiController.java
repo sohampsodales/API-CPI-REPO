@@ -143,59 +143,72 @@ public class ApiController {
     }
 
     private AuthContext buildAuthContext(String authType,
-                                         String username,
-                                         String password,
-                                         String clientId,
-                                         String clientSecret,
-                                         String tokenUrl,
-                                         String grantType) {
+                                     String username,
+                                     String password,
+                                     String clientId,
+                                     String clientSecret,
+                                     String tokenUrl,
+                                     String grantType) {
 
-        AuthContext authContext = new AuthContext();
-        authContext.authenticationType = authType;
+    AuthContext authContext = new AuthContext();
+    authContext.authenticationType = authType;
 
-        if ("BASIC".equalsIgnoreCase(authType)) {
-            String encoded = Base64.getEncoder()
-                    .encodeToString((safeValue(username) + ":" + safeValue(password)).getBytes());
+    if ("BASIC".equalsIgnoreCase(authType)) {
 
-            authContext.authorizationHeader = "Basic " + encoded;
-            authContext.tokenUrl = safeValue(tokenUrl);
-            authContext.clientId = safeValue(username);
-            authContext.clientSecret = safeValue(password);
-            authContext.grantType = safeValue(grantType);
-
-        } else {
-            String encoded = Base64.getEncoder()
-                    .encodeToString((safeValue(clientId) + ":" + safeValue(clientSecret)).getBytes());
-
-            authContext.authorizationHeader = "Basic " + encoded;
-            authContext.tokenUrl = safeValue(tokenUrl);
-            authContext.clientId = safeValue(clientId);
-            authContext.clientSecret = safeValue(clientSecret);
-            authContext.grantType = isBlank(grantType) ? "client_credentials" : grantType;
+        if (isBlank(username) || isBlank(password)) {
+            throw new RuntimeException("Username and Password are required for BASIC authentication");
         }
 
-        return authContext;
+        String encoded = Base64.getEncoder()
+                .encodeToString((username + ":" + password).getBytes());
+
+        authContext.authorizationHeader = "Basic " + encoded;
+
+        authContext.username = username;
+        authContext.password = password;
+
+    } else {
+
+        if (isBlank(clientId) || isBlank(clientSecret) || isBlank(tokenUrl)) {
+            throw new RuntimeException("Token URL, Client ID and Client Secret are required for OAUTH2");
+        }
+
+        String encoded = Base64.getEncoder()
+                .encodeToString((clientId + ":" + clientSecret).getBytes());
+
+        authContext.authorizationHeader = "Basic " + encoded;
+        authContext.tokenUrl = tokenUrl;
+        authContext.clientId = clientId;
+        authContext.clientSecret = clientSecret;
+        authContext.grantType = isBlank(grantType) ? "client_credentials" : grantType;
     }
+
+    return authContext;
+}
 
     private void validateAuthInputs(String authType,
-                                    String username,
-                                    String password,
-                                    String clientId,
-                                    String clientSecret,
-                                    String tokenUrl) {
+                                String username,
+                                String password,
+                                String clientId,
+                                String clientSecret,
+                                String tokenUrl) {
 
-        if ("BASIC".equalsIgnoreCase(authType)) {
-            if (isBlank(username) || isBlank(password)) {
-                throw new RuntimeException("Username and Password are required for BASIC authentication");
-            }
-        } else if ("OAUTH2".equalsIgnoreCase(authType) || "OAUTH".equalsIgnoreCase(authType)) {
-            if (isBlank(clientId) || isBlank(clientSecret) || isBlank(tokenUrl)) {
-                throw new RuntimeException("Token URL, Client ID and Client Secret are required for OAUTH2");
-            }
-        } else {
-            throw new RuntimeException("Unsupported Authentication Type: " + authType);
+    if ("BASIC".equalsIgnoreCase(authType)) {
+
+        if (isBlank(username) || isBlank(password)) {
+            throw new RuntimeException("Username and Password are required for BASIC authentication");
         }
+
+    } else if ("OAUTH2".equalsIgnoreCase(authType) || "OAUTH".equalsIgnoreCase(authType)) {
+
+        if (isBlank(clientId) || isBlank(clientSecret) || isBlank(tokenUrl)) {
+            throw new RuntimeException("Token URL, Client ID and Client Secret are required for OAUTH2");
+        }
+
+    } else {
+        throw new RuntimeException("Unsupported Authentication Type: " + authType);
     }
+}
 
     private void addFileToZip(ZipOutputStream zipOut, File file, String fileName) throws IOException {
         if (file != null && file.exists()) {

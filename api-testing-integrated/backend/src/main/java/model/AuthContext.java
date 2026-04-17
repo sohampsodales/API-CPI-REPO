@@ -9,6 +9,8 @@ public class AuthContext {
     public String clientSecret;
     public String grantType;
     public String authorizationHeader;
+    public String username;
+    public String password;
 
     public String accessToken;
     public String refreshToken;

@@ -44,19 +44,37 @@ public class ApiTestRunner {
             HttpRequest.Builder requestBuilder = HttpRequest.newBuilder().uri(uri);
 
             // Authentication
-            if ("OAUTH".equalsIgnoreCase(safeValue(authContext.authenticationType))
-                    || "OAUTH2".equalsIgnoreCase(safeValue(authContext.authenticationType))) {
+         String authType = safeValue(authContext.authenticationType);
 
-                if (OAuth2Client.isTokenMissingOrExpired(authContext)) {
-                    org.sodales.LogCollector.log("Access token missing or expired. Fetching a new one...");
-                    OAuth2Client.getAccessToken(authContext);
-                }
+if ("OAUTH".equalsIgnoreCase(authType)
+        || "OAUTH2".equalsIgnoreCase(authType)) {
 
-                requestBuilder.header("Authorization", "Bearer " + authContext.accessToken);
+    if (OAuth2Client.isTokenMissingOrExpired(authContext)) {
+        org.sodales.LogCollector.log("Access token missing or expired. Fetching a new one...");
+        OAuth2Client.getAccessToken(authContext);
+    }
 
-            } else {
-                requestBuilder.header("Authorization", safeValue(authContext.authorizationHeader));
-            }
+    requestBuilder.header("Authorization", "Bearer " + authContext.accessToken);
+
+} 
+else if ("BASIC".equalsIgnoreCase(authType)) {
+
+    if (safeValue(authContext.username).isEmpty()
+            || safeValue(authContext.password).isEmpty()) {
+        throw new IllegalArgumentException("Username/Password required for BASIC auth");
+    }
+
+    String encoded = java.util.Base64.getEncoder().encodeToString(
+            (authContext.username + ":" + authContext.password).getBytes()
+    );
+
+    requestBuilder.header("Authorization", "Basic " + encoded);
+
+} 
+else {
+
+    requestBuilder.header("Authorization", safeValue(authContext.authorizationHeader));
+}
 
             // Headers from Excel
             if (test.headers != null && !test.headers.trim().isEmpty()) {
